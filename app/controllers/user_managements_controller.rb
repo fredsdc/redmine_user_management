@@ -32,9 +32,10 @@ class UserManagementsController < ApplicationController
   def create
     @user=User.new
     get_required_permissions
-    @user.assign_attributes what_to_update
+    to_update = what_to_update
+    @user.assign_attributes to_update.except(:group_ids)
 
-    if @user.save
+    if @user.save && @user.group_ids=to_update[:group_ids]
       flash[:notice] = l(:notice_successful_create)
       redirect_to edit_user_management_path @user
     else

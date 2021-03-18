@@ -2,7 +2,8 @@
 
 This plugin delegates user creation to non admin users (with restrictions).
 
-It adds an admin entry called User Managers:
+It adds an admin menu item called User Managers.
+
 A User Manager has:
 * a name and description
 * user fields the users can manage
@@ -10,8 +11,8 @@ A User Manager has:
 * groups the users can manage
 * users
 
-For these users, this plugin adds a top menu users that gives:
+For these users, this plugin adds a top menu Users that gives:
 * a search box for users
-* a button to create new users
+* a page to create/edit new users
 
-Admin users can't be edited by this plugin
+Admin users can't be edited or assigned by this plugin
