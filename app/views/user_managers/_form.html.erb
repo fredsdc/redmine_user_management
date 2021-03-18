@@ -1,0 +1,55 @@
+<%= error_messages_for 'user_manager' %>
+
+<div class="box tabular">
+  <p><%= f.text_field :name, :required => true %></p>
+  <p><%= f.text_field :description %></p>
+  <fieldset class="box tabular" id="user_manager_permissions"><legend><%= toggle_checkboxes_link('#user_manager_permissions input[type="checkbox"]') %><%= l(:label_permissions) %></legend>
+    <p><%= f.check_box  :manage_login %></p>
+    <p><%= f.check_box  :manage_password %></p>
+    <p><%= f.check_box  :manage_name %></p>
+    <p><%= f.check_box  :manage_mail %></p>
+    <p><%= f.check_box  :manage_status %></p>
+    <%= hidden_field_tag 'user_manager[user_custom_field_ids][]', '' %>
+    <% @user_custom_fields.each do |u| %>
+      <%= content_tag('p', label_tag(u[1]) + " " + check_box_tag('user_manager[user_custom_field_ids][]', u[0], u[2], :id => nil)) %>
+    <% end %>
+  </fieldset>
+  <fieldset class="box tabular" id="user_manager_groups"><legend><%= toggle_checkboxes_link('#user_manager_groups input[type="checkbox"]') %><%= l(:label_manage_groups) %></legend>
+    <%= hidden_field_tag 'user_manager[group_ids][]', '' %>
+    <% @groups.each do |g| %>
+      <%= content_tag('p', label_tag(g[1]) + " " + check_box_tag('user_manager[group_ids][]', g[0], g[2], :id => nil)) %>
+    <% end %>
+  </fieldset>
+  <fieldset class="box tabular" id="user_manager_users"><legend><%= l(:label_user_plural) %></legend>
+    <%= hidden_field_tag 'user_manager[principal_ids][]', '' %>
+    <% @users.each do |u| %>
+      <%= content_tag('p', hidden_field_tag('user_manager[principal_ids][]', u[0]) + " " + content_tag('a', u[1]) + " " + content_tag('a', nil, :class => 'icon icon-del', :onclick => '$(this).parent().remove();')) %>
+    <% end %>
+    <p id='new_user_above'><legend><%= label_tag(nil, l(:label_search)) %></legend><%= text_field_tag('user_manager_users_search', nil) %></p>
+    <%= javascript_tag "
+      user_tag = '#{ content_tag('p', hidden_field_tag('user_manager[principal_ids][]', "u0") + " " + content_tag('a', "u1") + " " + content_tag('a', nil, :class => 'icon icon-del',
+                     :onclick => '$(this).parent().remove();')) }';
+      observeAutocompleteField('user_manager_users_search',
+                               '#{ escape_javascript user_managers_autocomplete_path(:format => 'js') }',
+        {
+          select: function(event, ui){
+            $(user_tag).find('input').attr('value', ui.item.id).parent().find('a:first').text(ui.item.label).parent().insertBefore('#new_user_above');
+          },
+          response: function(event, ui){
+            $('#user_manager_users_search').removeClass('ajax-loading');
+            var principal_ids = $('input#user_manager_principal_ids_').map(function(){
+              return $(this).val()
+            }).get();
+            for (i=0;i<ui.content.length;i++){
+              if (principal_ids.includes(ui.content[i].id.toString())){
+                ui.content.splice(i,1);
+                i--
+              }
+            };
+          }
+        }
+      );
+    " %>
+  </fieldset>
+  <%= call_hook(:view_user_managers_form, :user_manager => @user_manager) %>
+</div>

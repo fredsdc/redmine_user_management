@@ -1,0 +1,25 @@
+<div class="contextual">
+  <%= link_to l(:label_user_new), new_user_management_path, :class => 'icon icon-add' %>
+</div>
+
+<h2><%=l(:label_user_manager_plural)%></h2>
+
+<div class="box tabular">
+  <%= content_tag('p', content_tag('legend', label_tag(nil, l(:label_search)) + text_field_tag('user_search', nil))) %>
+</div>
+
+<%= javascript_tag "
+observeAutocompleteField(
+  'user_search',
+  '#{ escape_javascript user_managements_autocomplete_path(:format => 'js') }',
+  {
+    select: function(event, ui){
+      if (ui.item.id) {
+        window.location.href = '#{ escape_javascript user_managements_path }' + '/' + ui.item.id + '/edit';
+      }
+    }
+  }
+)
+" %>
+
+<% html_title(l(:label_user_manager_plural)) %>

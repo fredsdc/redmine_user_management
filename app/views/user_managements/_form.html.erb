@@ -1,0 +1,40 @@
+<%= error_messages_for 'user' %>
+
+<div id="user_form">
+<fieldset class="box tabular">
+  <legend><%=l(:label_information_plural)%></legend>
+  <p><%= f.text_field :login, :required => true, :size => 25, :disabled => !@perms['login']  %></p>
+  <p><%= f.text_field :firstname, :required => true, :disabled => !@perms['name'] %></p>
+  <p><%= f.text_field :lastname, :required => true, :disabled => !@perms['name'] %></p>
+  <p><%= f.text_field :mail, :required => true, :disabled => !@perms['mail'] %></p>
+
+  <% @user.custom_field_values.each do |value| %>
+    <p><%= custom_field_tag_with_label :user, value %></p>
+  <% end %>
+</fieldset>
+
+<fieldset class="box tabular">
+  <legend><%=l(:label_authentication)%></legend>
+  <p><%= f.check_box :generate_password, :disabled => !@user.auth_source_id.nil? || !@perms['password'] || @user.new_record?, :checked => (@user.new_record? ? true : false) %></p>
+  <p><%= f.check_box :must_change_passwd, :disabled => !@user.auth_source_id.nil? || !@perms['password'] %></p>
+  <p><%= f.select :status, [[l(:status_active),1], [l(:status_locked),3]] %>
+</fieldset>
+
+<% if @perms['groups'].present? %>
+<fieldset class="box tabular">
+  <legend><%= toggle_checkboxes_link('user_group_ids') %><%=l(:label_group_plural)%></legend>
+  <%= hidden_field_tag 'user[group_ids][]', '' %>
+  <% user_group_ids = @user.group_ids %>
+  <% Group.find(@perms['groups']).sort.each do |group| %>
+    <p><label><%= group %></label><%= check_box_tag 'user[group_ids][]', group.id, user_group_ids.include?(group.id), :id => nil %></p>
+  <% end %>
+</fieldset>
+<% end %>
+</div>
+
+<%= javascript_tag "
+  $('input[id^=\"user_custom_field_values_\"]').attr('disabled', 'disabled');
+  var ucfs=#{@perms['ucfs']};
+  console.log(ucfs);
+  for(i=0;i<ucfs.length;i++){$('#user_custom_field_values_' + ucfs[i]).removeAttr('disabled')}
+" %>

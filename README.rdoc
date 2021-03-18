@@ -1,0 +1,17 @@
+= Redmine User Management plugin
+
+This plugin delegates user creation to non admin users (with restrictions).
+
+It adds an admin entry called User Managers:
+A User Manager has:
+* a name and description
+* user fields the users can manage
+* user custom fields the users can manage
+* groups the users can manage
+* users
+
+For these users, this plugin adds a top menu users that gives:
+* a search box for users
+* a button to create new users
+
+Admin users can't be edited by this plugin

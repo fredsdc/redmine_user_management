@@ -1,0 +1,13 @@
+# English strings go here for Rails i18n
+pt-BR:
+  # my_label: "My label"
+  label_user_manager_plural:      "Gerenciadores de usuários"
+  label_user_manager_new:         "Novo gerenciador de usuários"
+  field_manage_login:             "Gerenciar login"
+  field_manage_password:          "Gerenciar senha"
+  field_manage_name:              "Gerenciar nome"
+  field_manage_mail:              "Gerenciar email"
+  field_manage_status:            "Gerenciar status"
+  label_manage_groups:            "Gerenciar grupos"
+  manage_user_custom_field_name:  "Gerenciar %{name}"
+  field_blocked:                  "Bloqueado"

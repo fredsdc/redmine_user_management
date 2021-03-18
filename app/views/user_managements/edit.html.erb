@@ -1,0 +1,6 @@
+<%= title [l(:label_user_plural), user_managements_path], @user.name %>
+
+<%= labelled_form_for @user, url: user_management_path(id: @user.id) do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f} %>
+  <%= submit_tag l(:button_save) %>
+<% end %>

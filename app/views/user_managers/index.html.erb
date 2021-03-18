@@ -1,0 +1,30 @@
+<div class="contextual">
+<%= link_to l(:label_user_manager_new), new_user_manager_path, :class => 'icon icon-add' %>
+</div>
+
+<h2><%=l(:label_user_manager_plural)%></h2>
+
+<% if @user_managers.any? %>
+  <table class="list user_managers">
+    <thead><tr>
+      <th><%= l(:field_name) %></th>
+      <th><%= l(:field_description) %></th>
+      <th></th>
+    </tr></thead>
+    <tbody>
+    <% for user_manager in @user_managers %>
+      <tr>
+        <td class="name"><%= link_to user_manager.name, edit_user_manager_path(user_manager) %></td>
+        <td class="description"><%= link_to user_manager.description, edit_user_manager_path(user_manager) %></td>
+        <td class="buttons">
+          <%= delete_link user_manager_path(user_manager) %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+
+<% html_title(l(:label_user_manager_plural)) -%>

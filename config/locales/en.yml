@@ -1,0 +1,5 @@
+# English strings go here for Rails i18n
+en:
+  # my_label: "My label"
+  label_user_manager_plural: "User managers"
+  field_blocked:             "Blocked"
