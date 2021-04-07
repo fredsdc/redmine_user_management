@@ -1,5 +1,13 @@
 # English strings go here for Rails i18n
 en:
   # my_label: "My label"
-  label_user_manager_plural: "User managers"
-  field_blocked:             "Blocked"
+  label_user_manager_plural:      "User managers"
+  label_user_manager_new:         "New user manager"
+  field_manage_login:             "Manage login"
+  field_manage_password:          "Manage password"
+  field_manage_name:              "Manage name"
+  field_manage_mail:              "Manage email"
+  field_manage_status:            "Manage status"
+  label_manage_groups:            "Manage groups"
+  manage_user_custom_field_name:  "Manage %{name}"
+  field_blocked:                  "Blocked"
