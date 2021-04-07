@@ -16,3 +16,5 @@ For these users, this plugin adds a top menu Users that gives:
 * a page to create/edit new users
 
 Admin users can't be edited or assigned by this plugin
+
+Directory "doc" has images of this plugin in action
