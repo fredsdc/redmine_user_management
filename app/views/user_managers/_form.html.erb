@@ -17,7 +17,7 @@
   <fieldset class="box tabular" id="user_manager_groups"><legend><%= toggle_checkboxes_link('#user_manager_groups input[type="checkbox"]') %><%= l(:label_manage_groups) %></legend>
     <%= hidden_field_tag 'user_manager[group_ids][]', '' %>
     <% @groups.each do |g| %>
-      <%= content_tag('p', label_tag(g[1]) + " " + check_box_tag('user_manager[group_ids][]', g[0], g[2], :id => nil)) %>
+      <%= label_tag(nil, check_box_tag('user_manager[group_ids][]', g[0], g[2], :id => nil) + " " + g[1], class: 'block') %>
     <% end %>
   </fieldset>
   <fieldset class="box tabular" id="user_manager_users"><legend><%= l(:label_user_plural) %></legend>
