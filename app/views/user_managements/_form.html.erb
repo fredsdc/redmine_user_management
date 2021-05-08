@@ -21,12 +21,15 @@
 </fieldset>
 
 <% if @perms['groups'].present? %>
-<fieldset class="box tabular" id="user_group_ids" style="column-width: 500px;">
-  <legend><%= toggle_checkboxes_link('#user_group_ids input[type="checkbox"]') %><%=l(:label_group_plural)%></legend>
+<fieldset class="box tabular" id="group_ids">
+  <legend><%= toggle_checkboxes_link('#group_ids input[type="checkbox"]') %><%=l(:label_group_plural)%></legend>
   <%= hidden_field_tag 'user[group_ids][]', '' %>
   <% user_group_ids = @user.group_ids %>
   <% Group.find(@perms['groups']).sort.each do |group| %>
-    <p><label style="width: 500px;"><%= group %></label><%= check_box_tag 'user[group_ids][]', group.id, user_group_ids.include?(group.id), :id => nil %></p>
+    <label class="block">
+      <%= check_box_tag 'user[group_ids][]', group.id, user_group_ids.include?(group.id), :id => nil %>
+      <%= group %>
+    </label>
   <% end %>
 </fieldset>
 <% end %>
