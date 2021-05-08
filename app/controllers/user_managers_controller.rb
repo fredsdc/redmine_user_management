@@ -79,6 +79,6 @@ class UserManagersController < ApplicationController
   def find_user_manager
     @users = @user_manager.principals.map{|x| [x.id, x.name]}
     @user_custom_fields = UserCustomField.all.map{|x| [x.id, x.name, @user_manager.user_custom_field_ids.include?(x.id)]}
-    @groups = Group.select{|g| ! g.builtin?}.map{|x| [x.id, x.name, @user_manager.group_ids.include?(x.id)]}
+    @groups = Group.sorted.select{|g| ! g.builtin?}.map{|x| [x.id, x.name, @user_manager.group_ids.include?(x.id)]}
   end
 end
