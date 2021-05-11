@@ -39,5 +39,6 @@
   $('input[id^=\"user_custom_field_values_\"]').attr('disabled', 'disabled');
   var ucfs=#{@perms['ucfs']};
   console.log(ucfs);
-  for(i=0;i<ucfs.length;i++){$('#user_custom_field_values_' + ucfs[i]).removeAttr('disabled')}
+  for(i=0;i<ucfs.length;i++){$('#user_custom_field_values_' + ucfs[i]).removeAttr('disabled')};
+  $('#user_login').bind('input propertychange', function () {$(this).val($(this).val().replace(/[^0-9]/g, ''));});
 " %>
