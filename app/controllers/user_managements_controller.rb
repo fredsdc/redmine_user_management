@@ -25,17 +25,18 @@ class UserManagementsController < ApplicationController
   end
 
   def new
-    @user=User.new
+    @user=User.new(:language => Setting.default_language, :mail_notification => Setting.default_notification_option)
     get_required_permissions
   end
 
   def create
-    @user=User.new
+    @user=User.new(:language => Setting.default_language, :mail_notification => Setting.default_notification_option, :admin => false)
     get_required_permissions
     to_update = what_to_update
-    @user.assign_attributes to_update.except(:group_ids)
+    @user.assign_attributes to_update.except(:group_ids, :send_information)
 
     if @user.save && @user.group_ids=to_update[:group_ids]
+      Mailer.deliver_account_information(@user, @user.password) if to_update[:send_information].present?
       flash[:notice] = l(:notice_successful_create)
       redirect_to edit_user_management_path @user
     else
@@ -52,7 +53,9 @@ class UserManagementsController < ApplicationController
   def update
     @user=User.find(params[:id])
     if block_user_admin
-      if @user.update what_to_update
+      to_update = what_to_update
+      if @user.update to_update.except(:send_information)
+        Mailer.deliver_account_information(@user, @user.password) if to_update[:send_information].present?
         flash[:notice] = l(:notice_successful_update)
         redirect_to edit_user_management_path @user
       else
@@ -134,6 +137,9 @@ class UserManagementsController < ApplicationController
     to_update[:status]              = params[:user][:status]
     to_update[:group_ids]           = @user.group_ids.map(&:to_s) - @perms['groups'].map(&:to_s) + (@perms['groups'].map(&:to_s) & params[:user][:group_ids].to_a)
     to_update[:custom_field_values] = @perms['ucfs'].map(&:to_s).select{|i| params[:user][:custom_field_values][i]}.map{|i| [i, params[:user][:custom_field_values][i]]}.to_h
+    to_update[:send_information]    = true                                  if to_update[:generate_password].present? ||
+                                                                               (to_update[:login].present? && to_update[:login] != @user.login) ||
+                                                                               (to_update[:mail].present? && to_update[:mail] != @user.mail)
     to_update
   end
 end
