@@ -134,9 +134,10 @@ class UserManagementsController < ApplicationController
     to_update[:firstname]           = params[:user][:firstname]             if @perms['name'] || @user.new_record?
     to_update[:lastname]            = params[:user][:lastname]              if @perms['name'] || @user.new_record?
     to_update[:mail]                = params[:user][:mail]                  if @perms['mail'] || @user.new_record?
-    to_update[:status]              = params[:user][:status]
+    to_update[:status]              = params[:user][:status]                if @perms['status'] || @user.new_record?
     to_update[:group_ids]           = @user.group_ids.map(&:to_s) - @perms['groups'].map(&:to_s) + (@perms['groups'].map(&:to_s) & params[:user][:group_ids].to_a)
     to_update[:custom_field_values] = @perms['ucfs'].map(&:to_s).select{|i| params[:user][:custom_field_values][i]}.map{|i| [i, params[:user][:custom_field_values][i]]}.to_h
+    @user.custom_field_values.select{|x| x.custom_field.is_required && ! x.value.present?}.map{|x| to_update[:custom_field_values][x.custom_field.id].present? || to_update[:custom_field_values][x.custom_field.id]=x.custom_field.default_value}
     to_update[:send_information]    = true                                  if to_update[:generate_password].present? ||
                                                                                (to_update[:login].present? && to_update[:login] != @user.login) ||
                                                                                (to_update[:mail].present? && to_update[:mail] != @user.mail)
