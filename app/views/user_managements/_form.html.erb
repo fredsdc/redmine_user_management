@@ -17,7 +17,7 @@
   <legend><%=l(:label_authentication)%></legend>
   <p><%= f.check_box :generate_password, :disabled => !@user.auth_source_id.nil? || !@perms['password'] || @user.new_record?, :checked => (@user.new_record? ? true : false) %></p>
   <p><%= f.check_box :must_change_passwd, :disabled => !@user.auth_source_id.nil? || !@perms['password'] %></p>
-  <p><%= f.select :status, [[l(:status_active),1], [l(:status_locked),3]] %>
+  <p><%= f.select :status, [[l(:status_active),1], [l(:status_locked),3]], {}, :disabled => !@perms['status'] %>
 </fieldset>
 
 <% if @perms['groups'].present? %>
@@ -36,8 +36,7 @@
 </div>
 
 <%= javascript_tag "
-  $('input[id^=\"user_custom_field_values_\"]').attr('disabled', 'disabled');
+  $('[id^=\"user_custom_field_values_\"]').attr('disabled', 'disabled');
   var ucfs=#{@perms['ucfs']};
-  console.log(ucfs);
   for(i=0;i<ucfs.length;i++){$('#user_custom_field_values_' + ucfs[i]).removeAttr('disabled')}
 " %>
