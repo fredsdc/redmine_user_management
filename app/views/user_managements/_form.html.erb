@@ -1,37 +1,52 @@
 <%= error_messages_for 'user' %>
 
 <div id="user_form">
-<fieldset class="box tabular">
-  <legend><%=l(:label_information_plural)%></legend>
-  <p><%= f.text_field :login, :required => true, :size => 25, :disabled => !@perms['login']  %></p>
-  <p><%= f.text_field :firstname, :required => true, :disabled => !@perms['name'] %></p>
-  <p><%= f.text_field :lastname, :required => true, :disabled => !@perms['name'] %></p>
-  <p><%= f.text_field :mail, :required => true, :disabled => !@perms['mail'] %></p>
+<% if @perms['login'] || @perms['name'] || @perms['mail'] || @perms['ucfs'].present? %>
+  <fieldset class="box tabular">
+    <legend><%=l(:label_information_plural)%></legend>
+    <% if @perms['login'] %>
+      <p><%= f.text_field :login, :required => true, :size => 25 %></p>
+    <% end %>
+    <% if @perms['name'] %>
+      <p><%= f.text_field :firstname, :required => true %></p>
+      <p><%= f.text_field :lastname, :required => true %></p>
+    <% end %>
+    <% if @perms['mail'] %>
+      <p><%= f.text_field :mail, :required => true %></p>
+    <% end %>
+    <% @user.custom_field_values.each do |value| %>
+      <% if @perms['ucfs'].include?(value.custom_field.id) %>
+        <p><%= custom_field_tag_with_label :user, value %></p>
+      <% end %>
+    <% end %>
+  </fieldset>
+<% end %>
 
-  <% @user.custom_field_values.each do |value| %>
-    <p><%= custom_field_tag_with_label :user, value %></p>
-  <% end %>
-</fieldset>
-
-<fieldset class="box tabular">
-  <legend><%=l(:label_authentication)%></legend>
-  <p><%= f.check_box :generate_password, :disabled => !@user.auth_source_id.nil? || !@perms['password'] || @user.new_record?, :checked => (@user.new_record? ? true : false) %></p>
-  <p><%= f.check_box :must_change_passwd, :disabled => !@user.auth_source_id.nil? || !@perms['password'] %></p>
-  <p><%= f.select :status, [[l(:status_active),1], [l(:status_locked),3]], {}, :disabled => !@perms['status'] %>
-</fieldset>
+<% if @perms['password'] || @user.new_record? || @perms['status'] %>
+  <fieldset class="box tabular">
+    <legend><%=l(:label_authentication)%></legend>
+    <% if @perms['password'] || @user.new_record? %>
+      <p><%= f.check_box :generate_password, :disabled => !@user.auth_source_id.nil? || @user.new_record?, :checked => (@user.new_record? ? true : false) %></p>
+      <p><%= f.check_box :must_change_passwd, :disabled => !@user.auth_source_id.nil? %></p>
+    <% end %>
+    <% if @perms['status'] || @user.new_record? %>
+      <p><%= f.select :status, [[l(:status_active),1], [l(:status_locked),3]], {} %>
+    <% end %>
+  </fieldset>
+<% end %>
 
 <% if @perms['groups'].present? %>
-<fieldset class="box tabular" id="group_ids">
-  <legend><%= toggle_checkboxes_link('#group_ids input[type="checkbox"]') %><%=l(:label_group_plural)%></legend>
-  <%= hidden_field_tag 'user[group_ids][]', '' %>
-  <% user_group_ids = @user.group_ids %>
-  <% Group.find(@perms['groups']).sort.each do |group| %>
-    <label class="block">
-      <%= check_box_tag 'user[group_ids][]', group.id, user_group_ids.include?(group.id), :id => nil %>
-      <%= group %>
-    </label>
-  <% end %>
-</fieldset>
+  <fieldset class="box tabular" id="group_ids">
+    <legend><%= toggle_checkboxes_link('#group_ids input[type="checkbox"]') %><%=l(:label_group_plural)%></legend>
+    <%= hidden_field_tag 'user[group_ids][]', '' %>
+    <% user_group_ids = @user.group_ids %>
+    <% Group.find(@perms['groups']).sort.each do |group| %>
+      <label class="block">
+        <%= check_box_tag 'user[group_ids][]', group.id, user_group_ids.include?(group.id), :id => nil %>
+        <%= group %>
+      </label>
+    <% end %>
+  </fieldset>
 <% end %>
 </div>
 
