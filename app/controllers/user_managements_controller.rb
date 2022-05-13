@@ -20,6 +20,8 @@ class UserManagementsController < ApplicationController
   before_action :get_permissions
 
   helper :users
+  helper :custom_fields
+  include CustomFieldsHelper
 
   def index
   end
