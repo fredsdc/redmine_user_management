@@ -15,22 +15,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-require_dependency 'user_custom_field'
-require_dependency 'group'
-require_dependency 'user'
-
-class CustomField
-  unloadable
-  has_many :user_manager_ucfs, :dependent => :delete_all
+module RedmineUserManagement
+  module Patches
+    module UserPatch
+      def self.included(base)
+        base.class_eval do
+          has_many :user_manager_users, :foreign_key => 'principal_id', :dependent => :delete_all
+        end
+      end
+    end
+  end
 end
 
-class Group
-  unloadable
-  has_many :user_manager_groups, :dependent => :delete_all
-  has_many :user_manager_users, :dependent => :delete_all
-end
-
-class Principal
-  unloadable
-  has_many :user_manager_users, :dependent => :delete_all
+unless User.included_modules.include?(RedmineUserManagement::Patches::UserPatch)
+  User.send(:include, RedmineUserManagement::Patches::UserPatch)
 end
