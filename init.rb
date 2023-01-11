@@ -22,9 +22,7 @@ Redmine::Plugin.register :redmine_user_management do
   version '1.0'
   url 'http://github.com/fredsdc/redmine_user_management'
   author_url 'http://github.com/fredsdc'
-end
 
-Redmine::Plugin.register :redmine_user_management do
   menu :admin_menu, :user_managers, { controller: 'user_managers', action: 'index'},
     caption: :label_user_manager_plural, html: { class: 'icon icon-user_managers'}
 
